@@ -1,0 +1,97 @@
+PRDA-04 JOB MARKET ANALYSIS — REVISED INSIGHTS
+============================================================
+
+PROJECT SCOPE
+-------------
+The project analyses a supplied U.S.-oriented snapshot of 742 job-posting records and 42 features. MySQL 5.7.43 was used for data retrieval, SQL exploration and validation. Power Query was used for transformation, and Power BI was used for interactive reporting. The data is a supplied snapshot, not a live or current-market feed.
+
+EXECUTIVE FINDINGS
+------------------
+- 742 postings, 343 distinct company_txt values and 60 industries.
+- The most common exact job title is Data Scientist (131 postings), followed by Data Engineer (53) and Senior Data Scientist (34).
+- Biotech & Pharmaceuticals is the largest industry category (112 postings).
+- California has the most postings (152) and, among the ten states with the highest posting counts, the highest mean salary (USD 123.51K) and median (USD 120.75K).
+- The most frequently recorded skill flags are Python (392), Excel (388), SQL (380), AWS (176), Spark (167), Tableau (148), Hadoop (124), TensorFlow (72), SAS (66) and Power BI (56). Skill flags overlap; one posting can contribute to multiple skills.
+- The overall mean annualized salary midpoint is USD 101.48K; the median is USD 97.50K.
+
+SALARY METHOD AND VALIDATION
+----------------------------
+- Avg_SalaryK is the midpoint of Lower_Salary and Upper_Salary for all 742 rows; there were zero mismatches.
+- The Hourly flag identifies 24 hourly and 718 non-hourly records. Hourly Salary_Estimate values are expressed per hour, while lower/upper/average salary fields appear to be annualized equivalents. Examples are consistent with approximately 2,080 hours per year, but the dataset does not document the precise annualization rule; this is an inference.
+- Salary results were segmented by Hourly and Employer_provided to avoid mixing compensation arrangements without qualification:
+  * Non-hourly, not employer-provided: n=704; mean 102.42; median 98.00; SD 36.50; IQR 48.00.
+  * Non-hourly, employer-provided: n=14; mean 140.00; median 125.00; SD 39.59; IQR 35.00.
+  * Hourly, not employer-provided: n=21; mean 51.05; median 51.50; SD 12.14; IQR 12.00.
+  * Hourly, employer-provided: n=3; mean 55.00; median 55.00; SD 0.00; IQR 0.00.
+  Small employer-provided groups (n=14 and n=3) require caution.
+- IQR screening was performed separately by hourly basis using the nearest-rank quartile method and 1.5×IQR fences. It flagged 11 of 718 non-hourly records (1.53%) and 1 of 24 hourly records (4.17%). The 12 flagged records were inspected and retained; unusual salaries may be valid senior or specialist roles.
+
+STATE SALARY DISTRIBUTION
+-------------------------
+Values are USD thousands. The table below covers the ten states with the most salary records.
+State | n | Mean | Median | SD | Q1 | Q3 | IQR
+CA | 152 | 123.51 | 120.75 | 43.01 | 92.50 | 153.50 | 61.00
+MA | 103 | 107.50 | 107.50 | 31.93 | 84.50 | 134.50 | 50.00
+NY | 72 | 98.65 | 91.25 | 33.49 | 73.00 | 123.50 | 50.50
+VA | 41 | 95.62 | 89.50 | 21.24 | 82.00 | 107.00 | 25.00
+IL | 40 | 116.66 | 107.50 | 54.34 | 77.50 | 133.00 | 55.50
+MD | 35 | 97.36 | 93.50 | 20.90 | 81.00 | 107.50 | 26.50
+PA | 33 | 93.86 | 91.50 | 30.99 | 72.50 | 124.00 | 51.50
+TX | 28 | 92.68 | 90.25 | 32.23 | 71.50 | 105.50 | 34.00
+WA | 21 | 93.19 | 80.50 | 37.18 | 67.00 | 105.50 | 38.50
+NC | 21 | 98.45 | 99.50 | 20.59 | 80.50 | 117.50 | 37.00
+
+California has the highest mean and median in this set. Illinois has the highest standard deviation (54.34) and IQR (55.50), indicating wider variation. Virginia has the narrowest IQR (25.00). These are descriptive comparisons and may reflect role, industry and employer mix.
+
+SENIORITY AND ROLE COMPOSITION
+-----------------------------
+- Seniority tags: na=519 (mean 93.10; SD 34.46), sr=220 (mean 121.69; SD 36.69), jr=3 (mean 71.00; SD 30.92). The junior sample is too small for a general conclusion.
+- Within normalized role categories, senior average salary exceeded unclassified average salary for Analyst (80.13 vs 61.22), Data Engineer (124.69 vs 96.70), Data Scientist (135.59 vs 110.19), Other Scientist (111.82 vs 76.42) and Machine Learning Engineer (142.07 vs 119.13). Sample sizes differ by group and are shown in the report.
+- When both role and state were held constant in groups with at least five records per seniority category, results were not universal. Examples: CA Data Engineer senior 149.58 vs unclassified 107.83; MA Data Scientist 135.86 vs 94.08; NY Data Scientist 146.75 vs 104.75; IL Data Scientist senior 133.19 vs unclassified 155.65 (reverse pattern).
+- These are descriptive associations, not evidence that seniority independently causes higher pay. Role, state, industry and employer mix can still influence salaries.
+
+EXACT TITLES VS NORMALIZED ROLES
+-------------------------------
+Exact Job_Title preserves the advertised title string; job_title_sim groups related strings into broader categories. For example:
+- Exact Data Scientist: 131 postings; normalized Data Scientist category: 313 postings across 85 exact title strings.
+- Exact Data Engineer: 53; normalized Data Engineer: 119 across 29 exact title strings.
+- Exact Data Analyst: 15; normalized Analyst: 101 across 46 exact title strings.
+- Exact Machine Learning Engineer: 5; normalized Machine Learning Engineer: 22 across 9 exact title strings.
+The normalized source value "data analitics" (8 postings) is retained and noted as a possible spelling/standardization issue.
+
+EDUCATION TAGS
+--------------
+Education category | n | Mean | Median | SD
+M | 252 | 105.63 | 102.50 | 37.10
+P | 107 | 115.98 | 120.00 | 36.16
+na | 383 | 94.70 | 89.00 | 36.63
+Total | 742 | 101.48 | 97.50 | 37.48
+The assignment defines M and P as mentions of experience credit for a master's degree and Ph.D. in job descriptions. They do not prove that those degrees were mandatory. The comparison is descriptive, not causal.
+
+DATA QUALITY AND REPEATED-RECORD VALIDATION
+-------------------------------------------
+- IDs: 742 distinct IDs; zero duplicate IDs.
+- Rating: 11 records coded -1 (1.48%); Founded and Age: 50 each (6.74%). These sentinels were converted to null in Power Query only; the raw MySQL table was not modified.
+- FIELD4: 742/742 null (100%); excluded from analysis.
+- Core title, location, industry, company and salary columns contained no SQL NULL/blank records. Degree had no SQL NULL/blank values, but 383 records use the recorded category na.
+- Skill coverage: 647 postings had at least one TRUE among 16 tracked binary flags; 95 had none among the tracked fields. This does not prove those jobs required no skills.
+- Five-field repeated-pattern check: 222 groups involving 498 records (276 excess), based on company, exact title, state and salary bounds.
+- Full-row check across 41 non-ID fields: 221 repeated-content groups involving 496 records (275 excess). These are repeated content patterns, not proof of duplicate vacancies. No records were deleted.
+
+RECOMMENDATIONS
+---------------
+For job seekers:
+- Analyst: build a SQL + Power BI portfolio case with KPI definitions, a validated data model and a concise decision memo.
+- Data Engineer: build an ETL pipeline with Python/SQL, data-quality checks and logging; extend with AWS or Spark.
+- Data Scientist: develop a baseline predictive model, validate it with suitable metrics and document error analysis.
+- Treat Python, SQL and Excel as broad foundations. Frequency in this dataset is not a guarantee of employability or higher pay.
+
+For employers:
+- Separate essential skills from preferred skills and track each against hiring outcomes.
+- Clarify whether education is mandatory or provides experience credit.
+- Publish salary ranges and specify hourly versus annual compensation basis.
+- Standardize job titles, company names and locations; review salary bands by role and level.
+
+LIMITATIONS
+-----------
+This is a supplied U.S.-oriented snapshot, not a live feed. Binary skill flags may omit skills mentioned in descriptions; skill counts overlap. Small groups produce unstable estimates. Salary outlier flags are not proof of errors. Hourly annualization appears in the stored salary columns but is not documented in the source. Seniority and education associations are observational and not causal. The data does not include confirmed vacancy IDs or hiring outcomes, so repeated-content groups cannot be classified as duplicate vacancies with certainty.
